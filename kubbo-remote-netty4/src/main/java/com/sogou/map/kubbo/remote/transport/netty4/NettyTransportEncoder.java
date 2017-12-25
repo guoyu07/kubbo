@@ -14,11 +14,11 @@ import com.sogou.map.kubbo.remote.buffer.ChannelBuffers;
 
 /**
  * @author liufuliang
- *
  */
 
 @io.netty.channel.ChannelHandler.Sharable
 public class NettyTransportEncoder extends io.netty.handler.codec.MessageToMessageEncoder<Object> {
+    
     private final Codec codec;
     
     private final URL url;

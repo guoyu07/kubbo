@@ -305,7 +305,7 @@ public final class Constants {
     
     public static final String  ENCODE_BUFFER_KEY                    = "encode.buffer";
     
-    public static final int     DEFAULT_ENCODE_BUFFER_SIZE           = 1 * 1024; // default encode buffer size is 8k.
+    public static final int     DEFAULT_ENCODE_BUFFER_SIZE           = 1 * 1024; // default encode buffer size is 1k.
     
     public static final int     MAX_BUFFER_SIZE                      = 1024 * 1024; // 1M
 

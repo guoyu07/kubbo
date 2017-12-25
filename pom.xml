@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.sogou.map</groupId>
-    <artifactId>parent</artifactId>
-    <version>2</version>
-  </parent>
 
   <groupId>com.sogou.map</groupId>
   <artifactId>kubbo-parent</artifactId>
@@ -13,6 +8,56 @@
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description>The parent project of kubbo</description>
+
+  <organization>
+    <name>kubbo</name>
+    <url>https://github.com/lxb31/kubbo</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>LiuFuliang</name>
+      <id>liufuliang</id>
+      <email>fuliangliu (AT) foxmail.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>mssp-maven</id>
+      <url>http://repo.mssp.sogou/maven/content/groups/public/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>  
+        <checksumPolicy>warn</checksumPolicy>  
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>  
+      </releases>
+    </repository>
+  </repositories>  
+  
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>mssp-maven</id>
+      <name>mssp maven release repository</name>
+      <url>http://repo.mssp.sogou/maven/content/repositories/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>mssp-maven</id>
+      <name>mssp maven snapshot repository</name>
+      <url>http://repo.mssp.sogou/maven/content/repositories/snapshots/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
 
   <modules>
     <module>kubbo-all</module>
@@ -33,6 +78,8 @@
   </modules>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
@@ -53,7 +100,7 @@
     <brave_version>4.3.3</brave_version>
     <zipkin_reporter_version>0.10.0</zipkin_reporter_version>
   </properties>
-
+  
   <dependencyManagement>
     <dependencies>
       <!-- Common libs -->
@@ -165,13 +212,31 @@
   </profiles>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <!-- maven-javadoc-plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.10.4</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <phase>package</phase>   
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <!-- maven-javadoc-plugin -->
       <!-- javadoc for install -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -187,16 +252,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <developers>
-    <developer>
-        <name>LiuFuliang</name>
-        <id>liufuliang</id>
-        <email>liufuliang (AT) sogou-inc.com</email>
-        <roles>
-        <role>Developer</role>
-        </roles>
-        <timezone>+8</timezone>
-    </developer>
-  </developers>
 </project>

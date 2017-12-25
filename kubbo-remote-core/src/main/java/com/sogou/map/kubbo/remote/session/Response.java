@@ -132,6 +132,10 @@ public class Response {
     public boolean isHeartbeat() {
         return event && EVENT_HEARTBEAT == result;
     }
+    
+    public boolean isBadResponse() {
+        return this.status == BAD_RESPONSE;
+    }
 
     public Object getResult() {
         return result;

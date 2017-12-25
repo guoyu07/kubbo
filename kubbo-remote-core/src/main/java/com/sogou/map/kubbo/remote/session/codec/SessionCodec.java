@@ -10,7 +10,6 @@ import com.sogou.map.kubbo.common.logger.Logger;
 import com.sogou.map.kubbo.common.logger.LoggerFactory;
 import com.sogou.map.kubbo.common.util.StringUtils;
 import com.sogou.map.kubbo.remote.Channel;
-import com.sogou.map.kubbo.remote.RemoteException;
 import com.sogou.map.kubbo.remote.buffer.ChannelBuffer;
 import com.sogou.map.kubbo.remote.buffer.ChannelBufferInputStream;
 import com.sogou.map.kubbo.remote.buffer.ChannelBufferOutputStream;
@@ -52,10 +51,6 @@ public class SessionCodec extends TransportCodec {
     protected static final byte FLAG_EVENT = (byte) 0x20;
 
     protected static final int SERIALIZATION_MASK = 0x1f;
-    
-    public Short getMagicCode() {
-        return MAGIC;
-    }
 
     @Override
     public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
@@ -186,19 +181,14 @@ public class SessionCodec extends TransportCodec {
             // close stream
             stream.close();
         } catch (Throwable t) {
-            if (!res.isEvent() && res.getStatus() != Response.BAD_RESPONSE) {
-                try {
-                    // FIXME 在Codec中打印出错日志？在IoHanndler的caught中统一处理？
-                    logger.warn("Fail to encode response: " + res + ", send bad_response info instead, cause: " + t.getMessage(), t);
-                    
-                    Response r = new Response(res.getId(), res.getVersion());
-                    r.setStatus(Response.BAD_RESPONSE);
-                    r.setErrorMessage("Failed to send response: " + res + ", cause: " + StringUtils.toString(t));
-                    channel.send(r);
-                    return;
-                } catch (RemoteException e) {
-                    logger.warn("Failed to send BAD_RESPONSE back: " + res + ", cause: " + e.getMessage(), e);
-                }
+            if (!res.isEvent() && res.isBadResponse()) {
+                logger.warn("Fail to encode response: " + res + ", send exception info instead, cause: " + t.getMessage(), t);
+                buffer.clear();
+                Response r = new Response(res.getId(), res.getVersion());
+                r.setStatus(Response.BAD_RESPONSE);
+                r.setErrorMessage("Failed to send response: " + res + ", cause: " + StringUtils.toString(t));
+                encodeResponse(channel, buffer, r);
+                return;
             }
             
             // 重新抛出收到的异常
